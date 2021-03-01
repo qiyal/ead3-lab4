@@ -20,6 +20,10 @@ public class SalariedCommissionEmployee extends Employee {
         return amountOfCommission;
     }
 
+    public void setAmountOfCommission(Double amountOfCommission) {
+        this.amountOfCommission = amountOfCommission;
+    }
+
     @Override
     public String toString() {
         return "SalariedCommissionEmployee{" +

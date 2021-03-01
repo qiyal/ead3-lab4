@@ -1,6 +1,7 @@
 package kz.iitu.spring.demo_atm.dao;
 
 import kz.iitu.spring.demo_atm.DBConnection;
+import kz.iitu.spring.demo_atm.event.AmountOfCommissionChangeEvent;
 import kz.iitu.spring.demo_atm.event.SalaryChangeEvent;
 import kz.iitu.spring.demo_atm.models.CommissionEmployee;
 import kz.iitu.spring.demo_atm.models.Employee;
@@ -38,8 +39,17 @@ public class EmployeeDao implements ApplicationEventPublisherAware {
 
         String sql = "UPDATE " + tableName + " SET salary = " + employee.getSalary() + sqlBonus + " WHERE id = " + employee.getId();
         dbConnection.updateData(sql);
-        System.out.println(sql);
+//        System.out.println(sql);
         this.eventPublisher.publishEvent(new SalaryChangeEvent(this, employee, oldSalary));
+    }
+
+    public void updateAmountOfCommission(Employee employee, Double amountOfCommission) {
+        String tableName = "salaried_commission_employees";
+
+        String sql = "UPDATE " + tableName + " SET amount_of_commission = " + ((SalariedCommissionEmployee)employee).getAmountOfCommission() + " WHERE id = " + employee.getId();
+        dbConnection.updateData(sql);
+//        System.out.println(sql);
+        this.eventPublisher.publishEvent(new AmountOfCommissionChangeEvent(this, employee, amountOfCommission));
     }
 
     @Override

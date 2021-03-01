@@ -173,11 +173,11 @@ public class PayrollSystem {
 
         System.out.print("chose employee: ");
         Integer indexEmployee = sc.nextInt();
-        Double oldSalary = employees.get(indexEmployee).getSalary();
+        Double amountOfCommission = ((SalariedCommissionEmployee) employees.get(indexEmployee)).getAmountOfCommission();
         System.out.print("input sale amount: ");
         Double saleAmount = sc.nextDouble();
         salaryCalculatorService.calculateSalary((SalariedCommissionEmployee) employees.get(indexEmployee), saleAmount);
-        employeeDao.updateSalary(employees.get(indexEmployee), oldSalary);
+        employeeDao.updateAmountOfCommission(employees.get(indexEmployee), amountOfCommission);
     }
 
     public void start() {

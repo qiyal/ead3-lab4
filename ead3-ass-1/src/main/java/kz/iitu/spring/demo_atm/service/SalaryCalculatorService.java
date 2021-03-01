@@ -30,7 +30,7 @@ public class SalaryCalculatorService {
 
     public Employee calculateSalary(SalariedCommissionEmployee employee, Double amount) {
         Double bonus = amount * employee.getPercentageSales() / 100;
-        employee.setSalary(employee.getSalary() + bonus);
+        employee.setAmountOfCommission(employee.getAmountOfCommission() + bonus);
 
         return employee;
     }
