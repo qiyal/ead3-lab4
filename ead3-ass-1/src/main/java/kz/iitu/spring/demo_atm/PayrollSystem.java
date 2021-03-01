@@ -41,10 +41,14 @@ public class PayrollSystem {
                 String name = resultSet.getString("name");
                 Double salary = resultSet.getDouble("salary");
                 Double percentageSales = resultSet.getDouble("percentage_sales");
+                Double amountOfCommission = resultSet.getDouble("amount_of_commission");
 
                 Double newSalary = salary * 1.1;
 
-                employeeDao.updateSalary(new SalariedCommissionEmployee(id, name, newSalary, percentageSales), salary);
+                employeeDao.updateSalary(
+                        new SalariedCommissionEmployee(id, name, newSalary, percentageSales, amountOfCommission),
+                        salary
+                );
             }
         } catch (SQLException sqlE) {
             System.out.println("ERROR!");
@@ -157,8 +161,9 @@ public class PayrollSystem {
                 String name = resultSet.getString("name");
                 Double salary = resultSet.getDouble("salary");
                 Double percentageSales = resultSet.getDouble("percentage_sales");
+                Double amountOfCommission = resultSet.getDouble("amount_of_commission");
 
-                employees.add(new SalariedCommissionEmployee(id, name, salary, percentageSales));
+                employees.add(new SalariedCommissionEmployee(id, name, salary, percentageSales, amountOfCommission));
                 System.out.println((i++) + ") " + "ID: " + id + " " + " Name: " + name);
             }
         } catch (SQLException sqlE) {
@@ -182,7 +187,7 @@ public class PayrollSystem {
     private void showMeu() {
         boolean isWord = true;
         while(isWord) {
-            System.out.println("enter 1 - Adding 10% base salaries for all Salaried-Commission employees");
+            System.out.println("\nenter 1 - Adding 10% base salaries for all Salaried-Commission employees");
             System.out.println("enter 2 - change salary for Salaried employee");
             System.out.println("enter 3 - change salary for Hourly employee");
             System.out.println("enter 4 - change salary for Commission employee");

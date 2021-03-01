@@ -2,16 +2,22 @@ package kz.iitu.spring.demo_atm.models;
 
 public class SalariedCommissionEmployee extends Employee {
     private Double percentageSales;
+    private Double amountOfCommission;
 
     public SalariedCommissionEmployee() {}
 
-    public SalariedCommissionEmployee(Integer id, String name, Double salary, Double percentageSales) {
+    public SalariedCommissionEmployee(Integer id, String name, Double salary, Double percentageSales, Double amountOfCommission) {
         super(id, name, salary);
         this.percentageSales = percentageSales;
+        this.amountOfCommission = amountOfCommission;
     }
 
     public Double getPercentageSales() {
         return percentageSales;
+    }
+
+    public Double getAmountOfCommission() {
+        return amountOfCommission;
     }
 
     @Override
@@ -21,6 +27,7 @@ public class SalariedCommissionEmployee extends Employee {
                 ", name=" + getName() +
                 ", salary=" + getSalary() +
                 ", percentageSales=" + percentageSales +
+                ", amountOfCommission=" + amountOfCommission +
                 '}';
     }
 }
