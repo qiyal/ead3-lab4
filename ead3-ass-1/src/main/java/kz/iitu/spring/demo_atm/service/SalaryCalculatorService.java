@@ -1,9 +1,6 @@
 package kz.iitu.spring.demo_atm.service;
 
-import kz.iitu.spring.demo_atm.models.CommissionEmployee;
 import kz.iitu.spring.demo_atm.models.Employee;
-import kz.iitu.spring.demo_atm.models.HourlyEmployee;
-import kz.iitu.spring.demo_atm.models.SalariedCommissionEmployee;
 import org.springframework.stereotype.Component;
 
 @Component

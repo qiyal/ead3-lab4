@@ -1,10 +1,7 @@
 package kz.iitu.spring.demo_atm;
 
 import kz.iitu.spring.demo_atm.dao.EmployeeDao;
-import kz.iitu.spring.demo_atm.models.CommissionEmployee;
 import kz.iitu.spring.demo_atm.models.Employee;
-import kz.iitu.spring.demo_atm.models.HourlyEmployee;
-import kz.iitu.spring.demo_atm.models.SalariedCommissionEmployee;
 import kz.iitu.spring.demo_atm.service.SalaryCalculatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

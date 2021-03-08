@@ -1,7 +1,6 @@
 package kz.iitu.spring.demo_atm.handler;
 
 import kz.iitu.spring.demo_atm.event.AmountOfCommissionChangeEvent;
-import kz.iitu.spring.demo_atm.models.SalariedCommissionEmployee;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 

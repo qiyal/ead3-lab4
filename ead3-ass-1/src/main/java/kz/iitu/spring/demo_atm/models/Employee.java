@@ -1,45 +1,98 @@
 package kz.iitu.spring.demo_atm.models;
 
+import javax.persistence.*;
+
+@Entity
 public class Employee {
-    private Integer id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
-    private Double salary;
+    private double fixedSalary;
+    private double hourRate;
+    private int hoursWorked;
+    private float commRate;
+    @Enumerated(EnumType.STRING)
+    private EmployeeType emplType;
 
     public Employee() {}
 
-    public Employee(Integer id, String name) {
+    public Employee(Long id, String name, double fixedSalary, double hourRate, int hoursWorked, float commRate, EmployeeType emplType) {
         this.id = id;
         this.name = name;
+        this.fixedSalary = fixedSalary;
+        this.hourRate = hourRate;
+        this.hoursWorked = hoursWorked;
+        this.commRate = commRate;
+        this.emplType = emplType;
     }
 
-    public Employee(Integer id, String name, Double salary) {
-        this.id = id;
-        this.name = name;
-        this.salary = salary;
-    }
-
-    public Integer getId() {
+    public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public Double getSalary() {
-        return salary;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setSalary(Double salary) {
-        this.salary = salary;
+    public double getFixedSalary() {
+        return fixedSalary;
+    }
+
+    public void setFixedSalary(double fixedSalary) {
+        this.fixedSalary = fixedSalary;
+    }
+
+    public double getHourRate() {
+        return hourRate;
+    }
+
+    public void setHourRate(double hourRate) {
+        this.hourRate = hourRate;
+    }
+
+    public int getHoursWorked() {
+        return hoursWorked;
+    }
+
+    public void setHoursWorked(int hoursWorked) {
+        this.hoursWorked = hoursWorked;
+    }
+
+    public float getCommRate() {
+        return commRate;
+    }
+
+    public void setCommRate(float commRate) {
+        this.commRate = commRate;
+    }
+
+    public EmployeeType getEmplType() {
+        return emplType;
+    }
+
+    public void setEmplType(EmployeeType emplType) {
+        this.emplType = emplType;
     }
 
     @Override
     public String toString() {
         return "Employee{" +
                 "id=" + id +
-                ", name=" + name +
-                ", salary=" + salary +
+                ", name='" + name + '\'' +
+                ", fixedSalary=" + fixedSalary +
+                ", hourRate=" + hourRate +
+                ", hoursWorked=" + hoursWorked +
+                ", commRate=" + commRate +
+                ", emplType=" + emplType +
                 '}';
     }
 }
