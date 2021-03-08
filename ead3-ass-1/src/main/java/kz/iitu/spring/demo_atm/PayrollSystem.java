@@ -1,180 +1,98 @@
 package kz.iitu.spring.demo_atm;
 
-import kz.iitu.spring.demo_atm.dao.EmployeeDao;
+//import kz.iitu.spring.demo_atm.dao.EmployeeDao;
+import kz.iitu.spring.demo_atm.controller.EmployeeController;
 import kz.iitu.spring.demo_atm.models.Employee;
+import kz.iitu.spring.demo_atm.service.EmployeeService;
 import kz.iitu.spring.demo_atm.service.SalaryCalculatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 @Component
 public class PayrollSystem {
     private Scanner sc;
-    private EmployeeDao employeeDao;
-    private DBConnection dbConnection;
-    private SalaryCalculatorService salaryCalculatorService;
-
-
     @Autowired
-    public PayrollSystem(EmployeeDao employeeDao, DBConnection dbConnection, SalaryCalculatorService salaryCalculatorService) {
-        this.employeeDao = employeeDao;
-        this.dbConnection = dbConnection;
-        this.salaryCalculatorService = salaryCalculatorService;
+    private SalaryCalculatorService salaryCalculatorService;
+    @Autowired
+    private EmployeeController employeeController;
+
+    public PayrollSystem() {
         this.sc = new Scanner(System.in);
     }
 
     public void add10PercentSalaryForSalariedCommission() {
-        String sql = "SELECT * FROM salaried_commission_employees";
-
-        ResultSet resultSet = dbConnection.getData(sql);
-
-        try {
-            while (resultSet.next()) {
-                Integer id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                Double salary = resultSet.getDouble("salary");
-                Double percentageSales = resultSet.getDouble("percentage_sales");
-                Double amountOfCommission = resultSet.getDouble("amount_of_commission");
-
-                Double newSalary = salary * 1.1;
-
-                employeeDao.updateSalary(
-                        new SalariedCommissionEmployee(id, name, newSalary, percentageSales, amountOfCommission),
-                        salary
-                );
-            }
-        } catch (SQLException sqlE) {
-            System.out.println("ERROR!");
-            System.out.println(sqlE);
+        List<Employee> employees = employeeController.getAllSalariedCommission();
+        for (int i = 0; i < employees.size(); i++) {
+            Double oldSalary = employees.get(i).getFixedSalary();
+            employees.get(i).setFixedSalary(oldSalary * 1.1);
+            employeeController.updateEmployeeFixedSalary(employees.get(i), oldSalary);
         }
     }
 
     private void changeSalaryForSalariedEmployee() {
-        String sql = "SELECT * FROM salaried_employees";
+        List<Employee> employees = employeeController.getAllSalariedEmployee();
 
-        ArrayList<Employee> employees = new ArrayList<>();
-        ResultSet resultSet = dbConnection.getData(sql);
-
-        try {
-            int i = 0;
-            while (resultSet.next()) {
-                Integer id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                Double salary = resultSet.getDouble("salary");
-                employees.add(new Employee(id, name, salary));
-                System.out.println((i++) + ") " + "ID: " + id + " " + " Name: " + name);
-            }
-        } catch (SQLException sqlE) {
-            System.out.println("ERROR!");
-            System.out.println(sqlE);
+        for (int i = 0; i < employees.size(); i++) {
+            System.out.println(i + ") " + employees.get(i).getName() + " (id=" + employees.get(i).getId() + ")");
         }
-
         System.out.print("chose employee: ");
         Integer indexEmployee = sc.nextInt();
-        Double oldSalary = employees.get(indexEmployee).getSalary();
+        Double oldSalary = employees.get(indexEmployee).getFixedSalary();
         System.out.print("input new salary: ");
-        employees.get(indexEmployee).setSalary(sc.nextDouble());
+        employees.get(indexEmployee).setFixedSalary(sc.nextDouble());
 
-        employeeDao.updateSalary(employees.get(indexEmployee), oldSalary);
+        employeeController.updateEmployeeFixedSalary(employees.get(indexEmployee), oldSalary);
     }
 
     private void changeSalaryForHourlyEmployee() {
-        String sql = "SELECT * FROM hourly_employees";
+        List<Employee> employees = employeeController.getAllHourlyEmployee();
 
-        ArrayList<Employee> employees = new ArrayList<>();
-        ResultSet resultSet = dbConnection.getData(sql);
-
-        try {
-            int i = 0;
-            while (resultSet.next()) {
-                Integer id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                Double salary = resultSet.getDouble("salary");
-                Integer work_hour = resultSet.getInt("work-hour");
-                Double salary_hour = resultSet.getDouble("salary-hour");
-
-                employees.add(new HourlyEmployee(id, name, salary, work_hour, salary_hour));
-                System.out.println((i++) + ") " + "ID: " + id + " " + " Name: " + name);
-            }
-        } catch (SQLException sqlE) {
-            System.out.println("ERROR!");
-            System.out.println(sqlE);
+        for (int i = 0; i < employees.size(); i++) {
+            System.out.println(i + ") " + employees.get(i).getName() + " (id=" + employees.get(i).getId() + ")");
         }
-
         System.out.print("chose employee: ");
         Integer indexEmployee = sc.nextInt();
-        Double oldSalary = employees.get(indexEmployee).getSalary();
+        Double oldSalary = employees.get(indexEmployee).getFixedSalary();
         System.out.print("input new salary hour: ");
-        ((HourlyEmployee)employees.get(indexEmployee)).setSalaryHour(sc.nextDouble());
-        salaryCalculatorService.calculateSalary((HourlyEmployee) employees.get(indexEmployee));
-        employeeDao.updateSalary(employees.get(indexEmployee), oldSalary);
+        employees.get(indexEmployee).setHourRate(sc.nextDouble());
+
+        salaryCalculatorService.calculateHourlyEmployeeSalary(employees.get(indexEmployee));
+        employeeController.updateEmployeeFixedSalary(employees.get(indexEmployee), oldSalary);
     }
 
     private void changeSalaryForCommissionEmployee() {
-        String sql = "SELECT * FROM commission_employees";
+        List<Employee> employees = employeeController.getAllCommissionEmployee();
 
-        ArrayList<Employee> employees = new ArrayList<>();
-        ResultSet resultSet = dbConnection.getData(sql);
-
-        try {
-            int i = 0;
-            while (resultSet.next()) {
-                Integer id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                Double salary = resultSet.getDouble("salary");
-                Double percentageSales = resultSet.getDouble("percentage_sales");
-
-                employees.add(new CommissionEmployee(id, name, salary, percentageSales));
-                System.out.println((i++) + ") " + "ID: " + id + " " + " Name: " + name);
-            }
-        } catch (SQLException sqlE) {
-            System.out.println("ERROR!");
-            System.out.println(sqlE);
+        for (int i = 0; i < employees.size(); i++) {
+            System.out.println(i + ") " + employees.get(i).getName() + " (id=" + employees.get(i).getId() + ")");
         }
-
         System.out.print("chose employee: ");
         Integer indexEmployee = sc.nextInt();
-        Double oldSalary = employees.get(indexEmployee).getSalary();
+        Double oldSalary = employees.get(indexEmployee).getFixedSalary();
         System.out.print("input sale amount: ");
         Double saleAmount = sc.nextDouble();
-        salaryCalculatorService.calculateSalary((CommissionEmployee) employees.get(indexEmployee), saleAmount);
-        employeeDao.updateSalary(employees.get(indexEmployee), oldSalary);
+
+        salaryCalculatorService.calculateSalaryCommissionEmployee(employees.get(indexEmployee), saleAmount);
+        employeeController.updateEmployeeFixedSalary(employees.get(indexEmployee), oldSalary);
     }
 
     private void changeSalaryForSalariedCommissionEmployee() {
-        String sql = "SELECT * FROM salaried_commission_employees";
+        List<Employee> employees = employeeController.getAllSalariedCommission();
 
-        ArrayList<Employee> employees = new ArrayList<>();
-        ResultSet resultSet = dbConnection.getData(sql);
-
-        try {
-            int i = 0;
-            while (resultSet.next()) {
-                Integer id = resultSet.getInt("id");
-                String name = resultSet.getString("name");
-                Double salary = resultSet.getDouble("salary");
-                Double percentageSales = resultSet.getDouble("percentage_sales");
-                Double amountOfCommission = resultSet.getDouble("amount_of_commission");
-
-                employees.add(new SalariedCommissionEmployee(id, name, salary, percentageSales, amountOfCommission));
-                System.out.println((i++) + ") " + "ID: " + id + " " + " Name: " + name);
-            }
-        } catch (SQLException sqlE) {
-            System.out.println("ERROR!");
-            System.out.println(sqlE);
+        for (int i = 0; i < employees.size(); i++) {
+            System.out.println(i + ") " + employees.get(i).getName() + " (id=" + employees.get(i).getId() + ")");
         }
 
         System.out.print("chose employee: ");
         Integer indexEmployee = sc.nextInt();
-        Double amountOfCommission = ((SalariedCommissionEmployee) employees.get(indexEmployee)).getAmountOfCommission();
+        Double oldSalary = employees.get(indexEmployee).getFixedSalary();
         System.out.print("input sale amount: ");
         Double saleAmount = sc.nextDouble();
-        salaryCalculatorService.calculateSalary((SalariedCommissionEmployee) employees.get(indexEmployee), saleAmount);
-        employeeDao.updateAmountOfCommission(employees.get(indexEmployee), amountOfCommission);
+        salaryCalculatorService.calculateSalarySalariedCommissionEmployee(employees.get(indexEmployee), saleAmount);
+        employeeController.updateEmployeeFixedSalary(employees.get(indexEmployee), oldSalary);
     }
 
     public void start() {

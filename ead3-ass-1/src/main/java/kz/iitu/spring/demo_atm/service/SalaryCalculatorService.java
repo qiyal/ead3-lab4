@@ -5,29 +5,29 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SalaryCalculatorService {
-    public Employee calculateSalary(HourlyEmployee employee) {
+    public Employee calculateHourlyEmployeeSalary(Employee employee) {
         Double newSalary;
 
-        if (employee.getWorkHour() > 40) {
-            newSalary = 40.0 * employee.getSalaryHour() + (employee.getWorkHour() - 40) * 1.5 * employee.getSalaryHour();
+        if (employee.getHoursWorked() > 40) {
+            newSalary = 40.0 * employee.getHourRate() + (employee.getHoursWorked() - 40) * 1.5 * employee.getHourRate();
         } else {
-            newSalary = employee.getWorkHour() * employee.getSalaryHour();
+            newSalary = employee.getHoursWorked() * employee.getHourRate();
         }
-        employee.setSalary(newSalary);
+        employee.setFixedSalary(newSalary);
 
         return employee;
     }
 
-    public Employee calculateSalary(CommissionEmployee employee, Double amount) {
-        Double bonus = amount * employee.getPercentageSales() / 100;
-        employee.setSalary(employee.getSalary() + bonus);
+    public Employee calculateSalaryCommissionEmployee(Employee employee, Double amount) {
+        Double bonus = amount * employee.getCommRate() / 100;
+        employee.setFixedSalary(employee.getFixedSalary() + bonus);
 
         return employee;
     }
 
-    public Employee calculateSalary(SalariedCommissionEmployee employee, Double amount) {
-        Double bonus = amount * employee.getPercentageSales() / 100;
-        employee.setAmountOfCommission(employee.getAmountOfCommission() + bonus);
+    public Employee calculateSalarySalariedCommissionEmployee(Employee employee, Double amount) {
+        Double bonus = amount * employee.getCommRate() / 100;
+        employee.setFixedSalary(employee.getFixedSalary() + bonus);
 
         return employee;
     }
